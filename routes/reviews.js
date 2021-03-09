@@ -9,33 +9,15 @@ const ExpressError = require("../utils/ExpressError");
 
 const { isLoggedIn, isReviewAuthor, validateReview } = require("../middleware");
 
-router.post(
-	"/",
-	isLoggedIn,
-	validateReview,
-	catchAsync(async (req, res) => {
-		const campground = await Campground.findById(req.params.id);
-		const review = new Review(req.body.review);
-		review.author = req.user._id;
-		campground.reviews.push(review);
-		await review.save();
-		await (await campground).save();
-		req.flash("success", "Your review has been successfully added!");
-		res.redirect(`/campgrounds/${campground._id}`);
-	})
-);
+const reviews = require("../controllers/reviews");
+
+router.post("/", isLoggedIn, validateReview, catchAsync(reviews.createReview));
 
 router.delete(
 	"/:reviewId",
 	isLoggedIn,
 	isReviewAuthor,
-	catchAsync(async (req, res) => {
-		const { id, reviewId } = req.params;
-		await Campground.findByIdAndUpdate(id, { $pull: { reviews: reviewId } });
-		await Review.findByIdAndDelete(reviewId);
-		req.flash("success", "Your review has been successfully deleted");
-		res.redirect(`/campgrounds/${id}`);
-	})
+	catchAsync(reviews.deleteReview)
 );
 
 module.exports = router;
