@@ -29,7 +29,13 @@ const seedDb = async () => {
 			title: `${pickFromArraySample(descriptors)} ${pickFromArraySample(
 				places
 			)}`,
-			image: "https://source.unsplash.com/collection/483251",
+			images: [
+				{
+					url:
+						"https://res.cloudinary.com/dsdpbowkr/image/upload/v1615303988/YelpCamp/zxxsiqmygrwndsiiwsed.jpg",
+					filename: "YelpCamp/zxxsiqmygrwndsiiwsed",
+				},
+			],
 			description:
 				"Lorem ipsum, dolor sit amet consectetur adipisicing elit. Sed magnam est nulla delectus natus fugit nesciunt voluptatum doloribus consequuntur assumenda ipsam qui obcaecati aliquam aspernatur, illum, praesentium laudantium accusamus dolorum quas iste, sequi quod. Possimus dolores dolor vero numquam laborum.",
 			price: price,

@@ -2,7 +2,7 @@
 <div class="row">
 	<h1 class="text-center">Edit Campground</h1>
 	<div class="col-6 offset-3">
-		<form class="validated-form" action="/campgrounds/<%=campground._id%>?_method=PUT" method="POST" novalidate>
+		<form class="validated-form" action="/campgrounds/<%=campground._id%>?_method=PUT" method="POST" novalidate enctype="multipart/form-data">
 			<div class="mb-3">
 				<label class="form-label" for="title">Title</label>
 				<input
@@ -15,6 +15,7 @@
 				/>
 				<div class="valid-feedback">Looks good!</div>
 			</div>
+
 			<div class="mb-3">
 				<label class="form-label" for="location">Location</label>
 				<input
@@ -27,18 +28,7 @@
 				/>
 				<div class="valid-feedback">Looks good!</div>
 			</div>
-			<div class="mb-3">
-				<label class="form-label" for="image">Image Url</label>
-				<input
-					class="form-control"
-					type="text"
-					id="image"
-					name="campground[image]"
-					required
-					value="<%=campground.image %>"
-				/>
-				<div class="valid-feedback">Looks good!</div>
-			</div>
+			
 			<div class="mb-3">
 				<label class="form-label" for="price">Campground Price</label>
 				<div class="input-group">
@@ -60,15 +50,29 @@
 
 			<div class="mb-3">
 				<label class="form-label" for="description">Description</label>
-				<textarea class="form-control"
+				<textarea required class="form-control"
 					type="text"
 					id="description"
 					name="campground[description]"
-					required>
-				<%= campground.description%>
+					rows="5"><%=campground.description.trim()%>
 				</textarea>
 				<div class="valid-feedback">Looks good!</div>
 			</div>
+
+			<div class="mb-3">
+				<input class="form-control" type="file" id="image" name="image" multiple>
+				<div class="valid-feedback">Looks good!</div>
+			</div>
+			<div class="mb-3">
+				<% campground.images.forEach((img, i) => { %> 
+					<img class="img-thumbnail" src="<%= img.thumbnail %> " alt="...">
+					<div class="form-check-inline">
+						<input type="checkbox" id="img-<%= i %>" name="deleteImages[]" value="<%= img.filename %>">
+					</div>
+					<label for="img-<%= i %>">Delete?</label>
+				<% }) %> 
+			</div>
+
 			<div class="mb-3">
 				<button class="btn btn-info">Update Campground</button>
 			</div>
