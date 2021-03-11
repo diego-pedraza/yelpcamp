@@ -20,12 +20,15 @@ const pickFromArraySample = (array) =>
 
 const seedDb = async () => {
 	await Campground.deleteMany({});
-	for (let i = 0; i < 50; i++) {
+	for (let i = 0; i < 500; i++) {
 		const random = Math.floor(Math.random() * 1000);
 		const price = Math.floor(Math.random() * 20) + 10;
 		const camp = new Campground({
 			author: "60456c912ae2180701272d33",
-			geometry: { type: "Point", coordinates: [-114.3346, 48.4108] },
+			geometry: {
+				type: "Point",
+				coordinates: [cities[random].longitude, cities[random].latitude],
+			},
 			location: `${cities[random].city}, ${cities[random].state}`,
 			title: `${pickFromArraySample(descriptors)} ${pickFromArraySample(
 				places
