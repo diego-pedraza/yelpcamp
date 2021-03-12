@@ -23,9 +23,14 @@ const mongoSanitize = require("express-mongo-sanitize");
 const helmet = require("helmet");
 const { contentSecurityPolicy } = require("helmet");
 
+const MongoStore = require("connect-mongo");
+
+const dbUrl = process.env.DB_URL || "mongodb://localhost:27017/yelp-camp";
+const secret = process.env.SECRET || "tobedetermined";
+
 const app = express();
 
-mongoose.connect("mongodb://localhost:27017/yelp-camp", {
+mongoose.connect(dbUrl, {
 	useCreateIndex: true,
 	useNewUrlParser: true,
 	useUnifiedTopology: true,
@@ -96,9 +101,20 @@ app.use(methodOverride("_method"));
 
 app.use(express.static(path.join(__dirname, "public")));
 
+const store = MongoStore.create({
+	mongoUrl: dbUrl,
+	secret,
+	touchAfter: 24 * 60 * 60,
+});
+
+store.on("error", function (e) {
+	console.log("Session STORE error", e);
+});
+
 const sessionConfig = {
+	store,
 	name: "session",
-	secret: "tobedetermined",
+	secret,
 	resave: false,
 	saveUninitialized: true,
 	cookie: {
